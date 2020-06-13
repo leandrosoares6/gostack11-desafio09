@@ -27,6 +27,14 @@ export default class OrdersProducts1591907461109 implements MigrationInterface {
             type: 'uuid',
           },
           {
+            name: 'price',
+            type: 'decimal(5,2)',
+          },
+          {
+            name: 'quantity',
+            type: 'integer',
+          },
+          {
             name: 'created_at',
             type: 'timestamp',
             default: 'now()',
@@ -47,7 +55,7 @@ export default class OrdersProducts1591907461109 implements MigrationInterface {
         columnNames: ['order_id'],
         referencedTableName: 'orders',
         referencedColumnNames: ['id'],
-        onDelete: 'SET NULL',
+        onDelete: 'CASCADE',
         onUpdate: 'CASCADE',
       }),
     );
@@ -59,7 +67,7 @@ export default class OrdersProducts1591907461109 implements MigrationInterface {
         columnNames: ['product_id'],
         referencedTableName: 'products',
         referencedColumnNames: ['id'],
-        onDelete: 'SET NULL',
+        onDelete: 'CASCADE',
         onUpdate: 'CASCADE',
       }),
     );
@@ -67,9 +75,7 @@ export default class OrdersProducts1591907461109 implements MigrationInterface {
 
   public async down(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.dropForeignKey('orders_products', 'Product');
-
     await queryRunner.dropForeignKey('orders_products', 'Order');
-
     await queryRunner.dropTable('orders_products');
   }
 }
