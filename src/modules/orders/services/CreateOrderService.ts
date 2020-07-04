@@ -39,7 +39,7 @@ class CreateOrderService {
 
     const findAllProducts = await this.productsRepository.findAllById(products);
 
-    if (!!findAllProducts && findAllProducts.length < products.length) {
+    if (findAllProducts.length < products.length) {
       throw new AppError('There is at least one non-existent product');
     }
 
@@ -69,11 +69,6 @@ class CreateOrderService {
       };
     });
 
-    const order = await this.ordersRepository.create({
-      customer: findCustomer,
-      products: formattedProducts,
-    });
-
     const updateProducts = products.map(product => {
       return {
         id: product.id,
@@ -82,6 +77,11 @@ class CreateOrderService {
     });
 
     await this.productsRepository.updateQuantity(updateProducts);
+
+    const order = await this.ordersRepository.create({
+      customer: findCustomer,
+      products: formattedProducts,
+    });
 
     return order;
   }
